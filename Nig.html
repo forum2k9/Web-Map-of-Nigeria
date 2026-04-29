@@ -66,6 +66,12 @@
       font-size: 12px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
+
+    img {
+      width: 100px;
+      height: 90px;
+    }
+
   </style>
 </head>
 <body>
@@ -194,13 +200,16 @@
             const props = feature.properties;
             const popupContent = `
                 <div style="min-width: 200px;">
-                    <h6 style="font-weight: 800; margin-bottom: 5px;">🏞️ ${props.name || "Geographic Region"}</h6>
-                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.description || "No description"}</p>
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name} state</p>
                     <hr style="margin: 5px 0;">
-                    <div><strong>📐 Name:</strong> ${props.NAME || "Unknown"}</div>
-                    <div><strong>🆔 Parcel ID:</strong> ${props.parcelId || "N/A"}</div>
-                    <div><strong>📝 Notes:</strong> ${props.notes || "—"}</div>
-                    <div class="mt-2"><i class="fas fa-ruler-combined"></i> <em>Click for details</em></div>
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
                 </div>
             `;
             layer.bindPopup(popupContent);
@@ -264,13 +273,16 @@
             const props = feature.properties;
             const popupContent = `
                 <div style="min-width: 200px;">
-                    <h6 style="font-weight: 800; margin-bottom: 5px;">🏞️ ${props.name || "Geographic Region"}</h6>
-                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.description || "No description"}</p>
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
                     <hr style="margin: 5px 0;">
-                    <div><strong>📐 Name:</strong> ${props.NAME || "Unknown"}</div>
-                    <div><strong>🆔 Parcel ID:</strong> ${props.parcelId || "N/A"}</div>
-                    <div><strong>📝 Notes:</strong> ${props.notes || "—"}</div>
-                    <div class="mt-2"><i class="fas fa-ruler-combined"></i> <em>Click for details</em></div>
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
                 </div>
             `;
             layer.bindPopup(popupContent);
@@ -332,13 +344,16 @@
             const props = feature.properties;
             const popupContent = `
                 <div style="min-width: 200px;">
-                    <h6 style="font-weight: 800; margin-bottom: 5px;">🏞️ ${props.name || "Geographic Region"}</h6>
-                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.description || "No description"}</p>
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
                     <hr style="margin: 5px 0;">
-                    <div><strong>📐 Name:</strong> ${props.NAME || "Unknown"}</div>
-                    <div><strong>🆔 Parcel ID:</strong> ${props.parcelId || "N/A"}</div>
-                    <div><strong>📝 Notes:</strong> ${props.notes || "—"}</div>
-                    <div class="mt-2"><i class="fas fa-ruler-combined"></i> <em>Click for details</em></div>
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
                 </div>
             `;
             layer.bindPopup(popupContent);
@@ -404,13 +419,16 @@
             const props = feature.properties;
             const popupContent = `
                 <div style="min-width: 200px;">
-                    <h6 style="font-weight: 800; margin-bottom: 5px;">🏞️ ${props.name || "Geographic Region"}</h6>
-                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.description || "No description"}</p>
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
                     <hr style="margin: 5px 0;">
-                    <div><strong>📐 Name:</strong> ${props.NAME || "Unknown"}</div>
-                    <div><strong>🆔 Parcel ID:</strong> ${props.parcelId || "N/A"}</div>
-                    <div><strong>📝 Notes:</strong> ${props.notes || "—"}</div>
-                    <div class="mt-2"><i class="fas fa-ruler-combined"></i> <em>Click for details</em></div>
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
                 </div>
             `;
             layer.bindPopup(popupContent);
@@ -473,13 +491,16 @@
             const props = feature.properties;
             const popupContent = `
                 <div style="min-width: 200px;">
-                    <h6 style="font-weight: 800; margin-bottom: 5px;">🏞️ ${props.name || "Geographic Region"}</h6>
-                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.description || "No description"}</p>
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
                     <hr style="margin: 5px 0;">
-                    <div><strong>📐 Name:</strong> ${props.NAME || "Unknown"}</div>
-                    <div><strong>🆔 Parcel ID:</strong> ${props.parcelId || "N/A"}</div>
-                    <div><strong>📝 Notes:</strong> ${props.notes || "—"}</div>
-                    <div class="mt-2"><i class="fas fa-ruler-combined"></i> <em>Click for details</em></div>
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
                 </div>
             `;
             layer.bindPopup(popupContent);
@@ -542,13 +563,16 @@
             const props = feature.properties;
             const popupContent = `
                 <div style="min-width: 200px;">
-                    <h6 style="font-weight: 800; margin-bottom: 5px;">🏞️ ${props.name || "Geographic Region"}</h6>
-                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.description || "No description"}</p>
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
                     <hr style="margin: 5px 0;">
-                    <div><strong>📐 Name:</strong> ${props.NAME || "Unknown"}</div>
-                    <div><strong>🆔 Parcel ID:</strong> ${props.parcelId || "N/A"}</div>
-                    <div><strong>📝 Notes:</strong> ${props.notes || "—"}</div>
-                    <div class="mt-2"><i class="fas fa-ruler-combined"></i> <em>Click for details</em></div>
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
                 </div>
             `;
             layer.bindPopup(popupContent);
