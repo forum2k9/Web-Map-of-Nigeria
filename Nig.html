@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Map of Nigeria</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; font-family: Arial, sans-serif; }
+    #map { width: 100%; height: 100vh; }
+    .map-title {
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      background: white;
+      padding: 10px 18px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      font-weight: bold;
+      font-size: 18px;
+      text-align: center;
+    }
+    .north-arrow {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      z-index: 1000;
+      background: white;
+      padding: 8px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      text-align: center;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    .legend {
+      position: absolute;
+      bottom: 30px;
+      right: 15px;
+      z-index: 1000;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .legend i {
+      width: 14px;
+      height: 14px;
+      float: left;
+      margin-right: 8px;
+      opacity: 0.8;
+      padding-top:6px
+    }
+    .coords {
+      position: absolute;
+      bottom: 10px;
+      left: 100px;
+      z-index: 1000;
+      background: rgba(255,255,255,0.9);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+    img {
+      width: 100px;
+      height: 90px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="map-title">Web Map of Nigeria<br><small>Interactive Example with Full Cartographic Elements</small></div>
+  <div class="north-arrow">N<br>⬆</div>
+  <div id="map"></div>
+  <div class="coords" id="coords">Lat: 0, Lng: 0</div>
+  <div class="legend">
+    <strong>Legend</strong><br>
+    <i style="background:#1f78b4"></i> North East<br>
+    <i style="background:#33a02c"></i> North West<br>
+    <i style="background:#909190"></i> North Central<br>
+    <i style="background:#e31a1c"></i> South East<br>
+    <i style="background:#dd0add"></i> South West<br>
+    <i style="background:#07e0f0"></i> South South<br>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Add GeoJSON -->
+  <script src="nig.js"></script>
+
+  <script>
+    const nigBounds = L.latLngBounds(
+        L.latLng(6.499550, 2.276413), // Southwest coordinates
+        L.latLng(13.570735, 14.233040)  // Northeast coordinates
+    );
+
+
+    const map = L.map('map',
+      {
+        maxBounds: nigBounds,      // Restricts panning to this area
+        maxBoundsViscosity: 1.0,  // Makes the bounds feel "solid" (no bouncing back)
+        
+      }
+    ).setView([9.38, 7.17], 6);
+
+    const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 18,
+        minZoom: 6,
+        className: 'map-tiles'
+    }).addTo(map);
+
+    const baseMaps = {
+      'OpenStreetMap': carto,
+      // 'Satellite': satellite
+    };
+
+    // L.control.layers(baseMaps).addTo(map);
+    L.control.scale().addTo(map);
+
+    map.on('mousemove', function(e) {
+      document.getElementById('coords').innerHTML =
+        `Lat: ${e.latlng.lat.toFixed(5)}, Lng: ${e.latlng.lng.toFixed(5)}`;
+    });
+
+
+
+
+
+   // ---------- 3. ADD GEOJSON POLYGON (MULTIPOLYGON FROM USER) ----------
+    // The provided MULTIPOLYGON coordinates (converted to proper GeoJSON format)
+    // const geojsonPolygonDataXXX = {
+    //     "type": "FeatureCollection",
+    //     "features": [
+    //         {
+    //             "type": "Feature",
+    //             "properties": {
+    //                 "name": "Coastal Land Parcel",
+    //                 "description": "Waterfront property polygon along the Gulf Coast",
+    //                 "area": "Approximately 5.2 acres",
+    //                 "parcelId": "AL-COAST-001",
+    //                 "notes": "Prime development location with water access"
+    //             },
+    //             "geometry": {
+    //                 "type": "MultiPolygon",
+    //                 "coordinates": [[[
+    //                     [-88.12062799999995, 30.23320800000016],
+    //                     [-88.12121599999989, 30.23430600000006],
+    //                     [-88.12136799999996, 30.23463100000015],
+    //                     [-88.12166599999995, 30.23534000000018],
+    //                     [-88.12196399999988, 30.235532999999975],
+    //                     [-88.12232999999998, 30.23598700000008],
+    //                     [-88.12240599999996, 30.23643900000019],
+    //                     [-88.12262699999997, 30.236956000000134],
+    //                     [-88.12300099999999, 30.23734300000018],
+    //                     [-88.12329899999997, 30.237797000000114],
+    //                     [-88.12329899999997, 30.238182000000165],
+    //                     [-88.1231459999999, 30.23856900000004],
+    //                     [-88.1231459999999, 30.23902300000009],
+    //                     [-88.12322199999988, 30.239475000000027]
+    //                 ]]]
+    //             }
+    //         }
+    //     ]
+    // };
+
+
+// -------------------  NEZ POLYGON   -----------------------
+    // Style for the polygon: fill with semi-transparent blue, bold border
+    const polygonStyle = {
+        color: "#ff6b35",         // orange border for high visibility
+        weight: 3,
+        opacity: 0.9,
+        fillColor: "#4a90e2",     // vibrant blue fill
+        fillOpacity: 0.35,
+        dashArray: null,
+        smoothFactor: 1
+    };
+    
+    // Hover style for better interaction
+    const hoverStyle = {
+        color: "#ff2200",
+        weight: 5,
+        fillOpacity: 0.55,
+        fillColor: "#ffaa33"
+    };
+
+
+    // Add GeoJSON layer to map
+    customPolygonLayer = L.geoJSON(NEZ, {
+        style: polygonStyle,
+        onEachFeature: function(feature, layer) {
+            // Add popup with property information
+            const props = feature.properties;
+            const popupContent = `
+                <div style="min-width: 200px;">
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name} state</p>
+                    <hr style="margin: 5px 0;">
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
+                </div>
+            `;
+            layer.bindPopup(popupContent);
+            
+            // Highlight on hover
+            layer.on('mouseover', function(e) {
+                this.setStyle(hoverStyle);
+                // Optionally open a tooltip
+                if (!this.getPopup().isOpen()) {
+                    this.openTooltip();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                this.setStyle(polygonStyle);
+                this.closeTooltip();
+            });
+            
+            // Add tooltip with basic info
+            layer.bindTooltip(`📍 ${props.name || "←"}`, { sticky: true, direction: 'left' });
+            
+            // Log click for debugging
+            layer.on('click', function(e) {
+                console.log("Polygon clicked:", props);
+                // Show polygon info panel in sidebar
+                const panel = document.getElementById('polygonInfoPanel');
+                const detailsDiv = document.getElementById('polygonDetails');
+                if (panel && detailsDiv) {
+                    detailsDiv.innerHTML = `
+                        <strong>${props.name || "Land Parcel"}</strong><br>
+                        ${props.description || ""}<br>
+                        <span class="badge bg-primary mt-1">ID: ${props.parcelId || "N/A"}</span>
+                        <span class="badge bg-secondary mt-1">${props.area || "Area unknown"}</span>
+                    `;
+                    panel.classList.remove('d-none');
+                }
+            });
+        }
+    }).addTo(map);
+
+
+
+
+// -------------------  NWZ POLYGON   -----------------------
+    // Style for the polygon: fill with semi-transparent blue, bold border
+    const nwz_polygonStyle = {
+        color: "#ff6b35",         // orange border for high visibility
+        weight: 3,
+        opacity: 0.9,
+        fillColor: "#33a02c",     // vibrant blue fill
+        fillOpacity: 0.35,
+        dashArray: null,
+        smoothFactor: 1
+    };
+    
+
+    // Add GeoJSON layer to map
+    customPolygonLayer = L.geoJSON(NWZ, {
+        style: nwz_polygonStyle,
+        onEachFeature: function(feature, layer) {
+            // Add popup with property information
+            const props = feature.properties;
+            const popupContent = `
+                <div style="min-width: 200px;">
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
+                    <hr style="margin: 5px 0;">
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
+                </div>
+            `;
+            layer.bindPopup(popupContent);
+            
+            // Highlight on hover
+            layer.on('mouseover', function(e) {
+                this.setStyle(hoverStyle);
+                // Optionally open a tooltip
+                if (!this.getPopup().isOpen()) {
+                    this.openTooltip();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                this.setStyle(nwz_polygonStyle);
+                this.closeTooltip();
+            });
+            
+            // Add tooltip with basic info
+            layer.bindTooltip(`📍 ${props.name || "←"}`, { sticky: true, direction: 'left' });
+            
+            // Log click for debugging
+            layer.on('click', function(e) {
+                console.log("Polygon clicked:", props);
+                // Show polygon info panel in sidebar
+                const panel = document.getElementById('polygonInfoPanel');
+                const detailsDiv = document.getElementById('polygonDetails');
+                if (panel && detailsDiv) {
+                    detailsDiv.innerHTML = `
+                        <strong>${props.name || "Land Parcel"}</strong><br>
+                        ${props.description || ""}<br>
+                        <span class="badge bg-primary mt-1">ID: ${props.parcelId || "N/A"}</span>
+                        <span class="badge bg-secondary mt-1">${props.area || "Area unknown"}</span>
+                    `;
+                    panel.classList.remove('d-none');
+                }
+            });
+        }
+    }).addTo(map);
+
+
+// -------------------  NCZ POLYGON   -----------------------
+    // Style for the polygon: fill with semi-transparent blue, bold border
+    const ncz_polygonStyle = {
+        color: "#ff6b35",         // orange border for high visibility
+        weight: 3,
+        opacity: 0.9,
+        fillColor: "#909190",     // vibrant blue fill
+        fillOpacity: 0.35,
+        dashArray: null,
+        smoothFactor: 1
+    };
+    
+
+    // Add GeoJSON layer to map
+    customPolygonLayer = L.geoJSON(NCZ, {
+        style: ncz_polygonStyle,
+        onEachFeature: function(feature, layer) {
+            // Add popup with property information
+            const props = feature.properties;
+            const popupContent = `
+                <div style="min-width: 200px;">
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
+                    <hr style="margin: 5px 0;">
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
+                </div>
+            `;
+            layer.bindPopup(popupContent);
+            
+            // Highlight on hover
+            layer.on('mouseover', function(e) {
+                this.setStyle(hoverStyle);
+                // Optionally open a tooltip
+                if (!this.getPopup().isOpen()) {
+                    this.openTooltip();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                this.setStyle(ncz_polygonStyle);
+                this.closeTooltip();
+            });
+            
+            // Add tooltip with basic info
+            layer.bindTooltip(`📍 ${props.name || "←"}`, { sticky: true, direction: 'left' });
+            
+            // Log click for debugging
+            layer.on('click', function(e) {
+                console.log("Polygon clicked:", props);
+                // Show polygon info panel in sidebar
+                const panel = document.getElementById('polygonInfoPanel');
+                const detailsDiv = document.getElementById('polygonDetails');
+                if (panel && detailsDiv) {
+                    detailsDiv.innerHTML = `
+                        <strong>${props.name || "Land Parcel"}</strong><br>
+                        ${props.description || ""}<br>
+                        <span class="badge bg-primary mt-1">ID: ${props.parcelId || "N/A"}</span>
+                        <span class="badge bg-secondary mt-1">${props.area || "Area unknown"}</span>
+                    `;
+                    panel.classList.remove('d-none');
+                }
+            });
+        }
+    }).addTo(map);
+
+
+
+
+
+
+// -------------------  SEZ POLYGON   -----------------------
+    // Style for the polygon: fill with semi-transparent blue, bold border
+    const sez_polygonStyle = {
+        color: "#ff6b35",         // orange border for high visibility
+        weight: 3,
+        opacity: 0.9,
+        fillColor: "#e31a1c",     // vibrant blue fill
+        fillOpacity: 0.35,
+        dashArray: null,
+        smoothFactor: 1
+    };
+    
+
+    // Add GeoJSON layer to map
+    customPolygonLayer = L.geoJSON(SEZ, {
+        style: sez_polygonStyle,
+        onEachFeature: function(feature, layer) {
+            // Add popup with property information
+            const props = feature.properties;
+            const popupContent = `
+                <div style="min-width: 200px;">
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
+                    <hr style="margin: 5px 0;">
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
+                </div>
+            `;
+            layer.bindPopup(popupContent);
+            
+            // Highlight on hover
+            layer.on('mouseover', function(e) {
+                this.setStyle(hoverStyle);
+                // Optionally open a tooltip
+                if (!this.getPopup().isOpen()) {
+                    this.openTooltip();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                this.setStyle(sez_polygonStyle);
+                this.closeTooltip();
+            });
+            
+            // Add tooltip with basic info
+            layer.bindTooltip(`📍 ${props.name || "←"}`, { sticky: true, direction: 'left' });
+            
+            // Log click for debugging
+            layer.on('click', function(e) {
+                console.log("Polygon clicked:", props);
+                // Show polygon info panel in sidebar
+                const panel = document.getElementById('polygonInfoPanel');
+                const detailsDiv = document.getElementById('polygonDetails');
+                if (panel && detailsDiv) {
+                    detailsDiv.innerHTML = `
+                        <strong>${props.name || "Land Parcel"}</strong><br>
+                        ${props.description || ""}<br>
+                        <span class="badge bg-primary mt-1">ID: ${props.parcelId || "N/A"}</span>
+                        <span class="badge bg-secondary mt-1">${props.area || "Area unknown"}</span>
+                    `;
+                    panel.classList.remove('d-none');
+                }
+            });
+        }
+    }).addTo(map);
+
+
+
+// -------------------  SWZ POLYGON   -----------------------
+    // Style for the polygon: fill with semi-transparent blue, bold border
+    const swz_polygonStyle = {
+        color: "#ff6b35",         // orange border for high visibility
+        weight: 3,
+        opacity: 0.9,
+        fillColor: "#dd0add",     // vibrant blue fill
+        fillOpacity: 0.35,
+        dashArray: null,
+        smoothFactor: 1
+    };
+    
+
+    // Add GeoJSON layer to map
+    customPolygonLayer = L.geoJSON(SWZ, {
+        style: swz_polygonStyle,
+        onEachFeature: function(feature, layer) {
+            // Add popup with property information
+            const props = feature.properties;
+            const popupContent = `
+                <div style="min-width: 200px;">
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
+                    <hr style="margin: 5px 0;">
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
+                </div>
+            `;
+            layer.bindPopup(popupContent);
+            
+            // Highlight on hover
+            layer.on('mouseover', function(e) {
+                this.setStyle(hoverStyle);
+                // Optionally open a tooltip
+                if (!this.getPopup().isOpen()) {
+                    this.openTooltip();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                this.setStyle(swz_polygonStyle);
+                this.closeTooltip();
+            });
+            
+            // Add tooltip with basic info
+            layer.bindTooltip(`📍 ${props.name || "←"}`, { sticky: true, direction: 'left' });
+            
+            // Log click for debugging
+            layer.on('click', function(e) {
+                console.log("Polygon clicked:", props);
+                // Show polygon info panel in sidebar
+                const panel = document.getElementById('polygonInfoPanel');
+                const detailsDiv = document.getElementById('polygonDetails');
+                if (panel && detailsDiv) {
+                    detailsDiv.innerHTML = `
+                        <strong>${props.name || "Land Parcel"}</strong><br>
+                        ${props.description || ""}<br>
+                        <span class="badge bg-primary mt-1">ID: ${props.parcelId || "N/A"}</span>
+                        <span class="badge bg-secondary mt-1">${props.area || "Area unknown"}</span>
+                    `;
+                    panel.classList.remove('d-none');
+                }
+            });
+        }
+    }).addTo(map);
+
+
+
+// -------------------  SSZ POLYGON   -----------------------
+    // Style for the polygon: fill with semi-transparent blue, bold border
+    const ssz_polygonStyle = {
+        color: "#ff6b35",         // orange border for high visibility
+        weight: 3,
+        opacity: 0.9,
+        fillColor: "#07e0f0",     // vibrant blue fill
+        fillOpacity: 0.35,
+        dashArray: null,
+        smoothFactor: 1
+    };
+    
+
+    // Add GeoJSON layer to map
+    customPolygonLayer = L.geoJSON(SSZ, {
+        style: ssz_polygonStyle,
+        onEachFeature: function(feature, layer) {
+            // Add popup with property information
+            const props = feature.properties;
+            const popupContent = `
+                <div style="min-width: 200px;">
+                    <p style="margin-bottom: 4px; font-size: 0.85rem;">${props.name}  state</p>
+                    <hr style="margin: 5px 0;">
+                    <div><strong>Governor:</strong> ${props.SYE_name || "Unknown"}</div>
+                    <div><strong>Gender:</strong> ${props.SYE_gender || "Unknown"}</div>
+                    <div><strong>Party:</strong> ${props.SYE_party|| "Unknown"}</div>
+                    <div><strong>DOB:</strong> ${props.SYE_birth_date || "Unknown"}</div>
+                    <div><strong>Capital:</strong> ${props.capital || "Unknown"}</div>
+                    <div><strong>Geographic Zone:</strong> ${props.geographic || "Unknown"}</div>
+                    <div><strong>Area (Ha):</strong> ${props.area || "Unknown"}</div>
+                    <div><img src='${props.SYE_gov_pic}' /></div>
+                </div>
+            `;
+            layer.bindPopup(popupContent);
+            
+            // Highlight on hover
+            layer.on('mouseover', function(e) {
+                this.setStyle(hoverStyle);
+                // Optionally open a tooltip
+                if (!this.getPopup().isOpen()) {
+                    this.openTooltip();
+                }
+            });
+            layer.on('mouseout', function(e) {
+                this.setStyle(ssz_polygonStyle);
+                this.closeTooltip();
+            });
+            
+            // Add tooltip with basic info
+            layer.bindTooltip(`📍 ${props.name || "←"}`, { sticky: true, direction: 'left' });
+            
+            // Log click for debugging
+            layer.on('click', function(e) {
+                console.log("Polygon clicked:", props);
+                // Show polygon info panel in sidebar
+                const panel = document.getElementById('polygonInfoPanel');
+                const detailsDiv = document.getElementById('polygonDetails');
+                if (panel && detailsDiv) {
+                    detailsDiv.innerHTML = `
+                        <strong>${props.name || "Land Parcel"}</strong><br>
+                        ${props.description || ""}<br>
+                        <span class="badge bg-primary mt-1">ID: ${props.parcelId || "N/A"}</span>
+                        <span class="badge bg-secondary mt-1">${props.area || "Area unknown"}</span>
+                    `;
+                    panel.classList.remove('d-none');
+                }
+            });
+        }
+    }).addTo(map);
+
+
+
+
+  </script>
+</body>
+</html>
